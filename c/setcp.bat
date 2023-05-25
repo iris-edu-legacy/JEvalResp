@@ -1,0 +1,1 @@
+set JEVRESP_CLASSPATH=..\JEvalResp.jar

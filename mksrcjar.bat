@@ -1,0 +1,1 @@
+jar -cf dist\JEvalResp_src.jar src filesrc c Launcher JEvalResp.jpx mkjdoc.bat jdparams.txt

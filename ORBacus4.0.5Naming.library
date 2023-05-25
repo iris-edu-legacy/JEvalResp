@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>ORBacus4.0.5Naming</fullname>
+  <class>
+    <path>[../ORBacus4.0.5Naming/jars/OB.jar]</path>
+    <path>[../ORBacus4.0.5Naming/jars/OBNaming.jar]</path>
+  </class>
+</library>

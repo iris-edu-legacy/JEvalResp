@@ -1,0 +1,1 @@
+jar -cf JEvalResp_src.jar src filesrc c Launcher javadocs *.jp? *.bat *.exe *.txt *.prop JEvalResp JEvalResp0 jc testnet resp_files jars/RespCORBAStub.jar jars/gnu-regexp-1.1.3.jar

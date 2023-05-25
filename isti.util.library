@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>isti.util</fullname>
+  <class>
+    <path>[../isti.util/jars/isti.util.jar]</path>
+  </class>
+  <source>
+    <path>../isti.util/src</path>
+  </source>
+</library>

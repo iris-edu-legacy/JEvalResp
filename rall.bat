@@ -1,0 +1,1 @@
+java -DSEEDRESP="%SEEDRESP%" -jar JEvalResp.jar "*" "*" "*" "*" 1.0 10.0 10 -s=lin -v

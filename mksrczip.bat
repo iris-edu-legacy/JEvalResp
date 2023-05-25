@@ -1,0 +1,2 @@
+call wzzip -rP -xlocal\*.* JEvalResp_src.zip src filesrc c Launcher doc res CVS
+call wzzip -P JEvalResp_src.zip JEvalResp.jpx JEvalRespf.jpx *.bat *.txt jdparams.txt testnet *.library *.prop installer\*.iap* installer\*.jpg installer\*.bat installer\*.txt installer\*.jar webdist\index*.html

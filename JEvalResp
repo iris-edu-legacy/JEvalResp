@@ -1,0 +1,14 @@
+#!/bin/csh
+
+# search for the SEEDRESP env var
+set a=`env|grep SEEDRESP`
+
+# add local dir to path and search for JEvalResp
+set jpath=`env PATH={$PATH}:. which JEvalResp`
+ 
+if ($a == "")  then
+        #no seedresp set
+        java -jar {$jpath}.jar "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15" "$16" "$17" "$18" "$19" "$20"
+else
+        java -DSEEDRESP=$SEEDRESP -jar {$jpath}.jar "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15" "$16" "$17" "$18" "$19" "$20"
+endif

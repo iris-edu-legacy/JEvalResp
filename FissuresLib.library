@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+<!--JBuilder Library Definition File-->
+<fullname>FissuresLib</fullname>
+<class>
+<path>[../FissuresLib/jars/FissuresIDL.jar]</path>
+<path>[../FissuresLib/jars/FissuresImpl.jar]</path>
+</class>
+<source>
+<path>[../FissuresLib/fissuresIDL/src.jar]</path>
+<path>../FissuresLib/fissuresImpl/src</path>
+</source>
+<lastmodsaved>1383201464682</lastmodsaved>
+</library>

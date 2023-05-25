@@ -1,0 +1,64 @@
+
+SRC=evalresp/evalresp.c evalresp/alloc_fctns.c evalresp/string_fctns.c \
+	evalresp/error_fctns.c evalresp/parse_fctns.c evalresp/regexp.c \
+	evalresp/regsub.c evalresp/regerror.c evalresp/use_delay.c jevresp.c startJVM.c
+
+CSRC=evalresp/evresp_.c evalresp/alloc_fctns.c evalresp/string_fctns.c \
+	evalresp/error_fctns.c evalresp/parse_fctns.c evalresp/regexp.c \
+	evalresp/regsub.c evalresp/regerror.c evalresp/use_delay.c jevresp.c startJVM.c 
+
+COBJ=Obj/evresp_.o Obj/alloc_fctns.o Obj/string_fctns.o \
+	Obj/error_fctns.o Obj/parse_fctns.o Obj/regexp.o \
+	Obj/regsub.o Obj/regerror.o Obj/use_delay.o Obj/jevresp.o Obj/startJVM.o 
+
+FSRC=evalrespfm.f
+
+all: evalrespj evalrespf
+
+JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/
+
+Obj/alloc_fctns.o: evalresp/alloc_fctns.c
+	gcc -I${JAVA_HOME}/Headers evalresp/alloc_fctns.c -c -o Obj/alloc_fctns.o -DEVALRESP_COMP
+
+Obj/error_fctns.o: evalresp/error_fctns.c
+	gcc -I${JAVA_HOME}/Headers evalresp/error_fctns.c -c -o Obj/error_fctns.o -DEVALRESP_COMP
+
+Obj/parse_fctns.o: evalresp/parse_fctns.c
+	gcc -I${JAVA_HOME}/Headers evalresp/parse_fctns.c -c -o Obj/parse_fctns.o -DEVALRESP_COMP
+
+Obj/string_fctns.o: evalresp/string_fctns.c
+	gcc -I${JAVA_HOME}/Headers evalresp/string_fctns.c -c -o Obj/string_fctns.o -DEVALRESP_COMP
+
+Obj/regexp.o: evalresp/regexp.c
+	gcc -I${JAVA_HOME}/Headers evalresp/regexp.c -c -o Obj/regexp.o -DEVALRESP_COMP
+
+Obj/regsub.o: evalresp/regsub.c
+	gcc -I${JAVA_HOME}/Headers evalresp/regsub.c -c -o Obj/regsub.o -DEVALRESP_COMP
+
+Obj/regerror.o: evalresp/regerror.c
+	gcc -I${JAVA_HOME}/Headers evalresp/regerror.c -c -o Obj/regerror.o -DEVALRESP_COMP
+
+Obj/use_delay.o: evalresp/use_delay.c
+	gcc -I${JAVA_HOME}/Headers evalresp/use_delay.c -c -o Obj/use_delay.o -DEVALRESP_COMP
+
+Obj/evresp_.o: evalresp/evresp_.c
+	gcc -I${JAVA_HOME}/Headers evalresp/evresp_.c -c -o Obj/evresp_.o -DEVALRESP_COMP
+
+Obj/jevresp.o: jevresp.c
+	gcc -I${JAVA_HOME}/Headers jevresp.c -c -o Obj/jevresp.o -DEVALRESP_COMP
+
+Obj/startJVM.o: startJVM.c
+	gcc -I${JAVA_HOME}/Headers startJVM.c -c -o Obj/startJVM.o -DEVALRESP_COMP
+
+evalrespj: ${SRC}
+	gcc -I${JAVA_HOME}/Headers "-framework" "JavaVM" -o evalrespj -DEVALRESP_COMP  ${SRC}
+
+evalrespf: ${FSRC} ${COBJ}
+	g77 -I./evalresp -I${JAVA_HOME}/Headers "-framework" "JavaVM" -o evalrespf -DEVALRESP_COMP ${FSRC} ${COBJ}
+
+jevtest: jevtest.c jevresp.c startJVM.c
+	gcc -I${JAVA_HOME}/Headers "-framework" "JavaVM" -o jevtest jevtest.c jevresp.c startJVM.c
+	
+
+clean:
+	rm -f evalrespf evalrespj Obj/*.o

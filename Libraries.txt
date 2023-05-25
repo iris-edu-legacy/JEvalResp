@@ -1,0 +1,68 @@
+
+
+For the ant build you may need to install additional plugins.
+In particular:
+  ant-apache-bcel.jar
+  ant-junit.jar
+In /usr/share/ant/lib or ~/.ant/lib or similar.
+
+On CentOS these can be installed via the package manager.
+
+-----------------------------------------------------
+
+gnu.regexp = Regular Expressions for Java
+
+Download from:
+  http://www.isti.com/libs/zips/gnu.regexp.zip
+    or
+  http://www.isti.com/libs/gnu.regexp
+
+Put "gnu.regexp" directory on same level as "JEvalResp" directory.
+
+-------------------------------------------------------
+
+isti.util = ISTI utility library
+
+Available from svn://svn.isti.com/isti.util/trunk
+
+Put "isti.util" directory on same level as "JEvalResp" directory.
+
+-------------------------------------------------------
+
+FissuresLib = Fissures v1.0 / v1.1.13 / IfNetwork.idl v1.0.1
+
+Download from:
+  http://www.isti.com/libs/zips/FissuresLib_20131022.zip
+    or
+  http://www.isti2.com/libs/zips/FissuresLib_20131022.zip
+
+Put "FissuresLib" directory on same level as "JEvalResp" directory.
+
+-------------------------------------------------------
+
+ORBacus4.0.5Naming = ORBacus 4.0.5
+
+Download from:
+  http://www.isti.com/libs/zips/ORBacus4.0.5Naming.zip
+    or
+  http://www.isti.com/libs/ORBacus4.0.5Naming
+
+Put "ORBacus4.0.5Naming" directory on same level as "JEvalResp" directory.
+
+--------------------------------------------------------
+
+IRIS-WS = 2.0.11
+
+Download from
+  http://ds.iris.edu/ds/nodes/dmc/software/downloads/iris-ws/2-0-11/
+and put in jars directory
+
+--------------------------------------------------------
+
+JUnit = 4.12
+Hamcrest-core = 1.3
+
+Download from
+  https://github.com/junit-team/junit/wiki/Download-and-Install
+and put in jars directory
+

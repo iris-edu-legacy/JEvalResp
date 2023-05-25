@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>gnu.regexp</fullname>
+  <class>
+    <path>[../gnu.regexp/lib/gnu-regexp-1.1.3.jar]</path>
+  </class>
+  <source>
+    <path>../gnu.regexp/src</path>
+  </source>
+</library>

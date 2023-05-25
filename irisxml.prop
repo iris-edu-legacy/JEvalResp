@@ -1,0 +1,4 @@
+# IRIS station.xml server:
+http://service.iris.edu/fdsnws/station/1
+# this extra parameter will be appended to the call
+level=response

@@ -1,0 +1,46 @@
+
+September 15, 2005
+
+The MacOSX version of JEvalResp C and Fortran calling examples are 
+provided with a UNIX style Makefile. Here are the necessary versions
+of programs we used to get the evalrespj and evalrespf to compile:
+
+isti% gcc -v
+Reading specs from /usr/libexec/gcc/darwin/ppc/3.1/specs
+Thread model: posix
+Apple Computer, Inc. GCC version 1175, based on gcc version 3.1 20020420 (prerelease)
+
+isti% g77 -v
+Reading specs from /usr/local/lib/gcc-lib/powerpc-apple-darwin6.1/3.1/specs
+Configured with: ../gcc3-1151/configure --enable-pfe --disable-nls --enable-threads=posix --enable-languages=f77
+Thread model: posix
+Apple Computer, Inc. GCC version 1151, based on gcc version 3.1 20020420 (prerelease)
+
+isti% java -version
+java version "1.4.1_01"
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.1_01-39)
+Java HotSpot(TM) Client VM (build 1.4.1_01-14, mixed mode)
+
+
+COMPILING:
+
+To compile, simply type:
+
+make -f Makefile.MacOSX
+
+or if "g77" is not available, simply type:
+
+make -f Makefile.MacOSX evalrespj
+
+
+RUNNING: 
+
+To run the tests, use the ANMO test file provided in this directory.
+See the "run.sh" and "run_fortran.sh" files for details on environment setup.
+
+run.sh ANMO BHZ 1990 1 0.001 10 100 RESP.IU.ANMO..BHZ
+
+and if "g77" was available:
+
+run_fortran.sh
+

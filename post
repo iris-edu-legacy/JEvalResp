@@ -1,0 +1,9 @@
+
+ant clean
+ant dist
+
+pushd dist
+scp JEvalResp_v1.80_dist.tar.gz andrew@love.isti.com:~/public_html
+scp JEvalResp_v1.80_dist.zip andrew@love.isti.com:~/public_html
+scp JEvalResp_v1.80_webdist.tar.gz andrew@love.isti.com:~/public_html
+popd
