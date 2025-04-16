@@ -686,7 +686,7 @@ public class RespProcessor
         inFName = inFName.substring(2);
                                   //create parser obj for file:
       final RespFileParser parserObj = new RespFileParser(inFName);
-        System.out.printf("processing '%s'\n", inFName);  // XXX
+        System.out.printf("processing '%s'\n", inFName);
          //find and read responses; add to number-matched count:
       chanIdMatchCount += doReadResponses(staArr,chaArr,netArr,siteArr,
                     beginDateObj,endDateObj,respCallbackObj,parserObj,null);

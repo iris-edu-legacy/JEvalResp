@@ -45,7 +45,8 @@
 //   8/26/2014 -- [ET]  Added 'globStringSiteArrMatch()' method; modified
 //                      'findRespfiles()' method to make "--" match
 //                      "no location".
-//
+//   4/16/2025 -- EarthScope - move static DateFormat calls to instance 
+//                      variables for thread-safety
 
 package com.isti.jevalresp;
 
@@ -88,40 +89,6 @@ import com.isti.util.UtilFns;
  */
 public class RespUtils
 {
-    /**
-     * DateFormat object for parsing and formatting 'evalresp'-style
-     * date/time strings to/from Date objects.  Uses a pattern string of
-     * "yyyy,DDD,HH:mm:ss" and is configured to the GMT time zone.
-     */
-  public static final DateFormat respDateFormatter =
-                              UtilFns.createDateFormatObj("yyyy,D,HH:mm:ss",
-                                                 UtilFns.GMT_TIME_ZONE_OBJ);
-    /**
-     * DateFormat object for parsing and formatting 'evalresp'-style
-     * date/time strings (that include fractional seconds) to/from Date
-     * objects.  Uses a pattern string of "yyyy,DDD,HH:mm:ss.SSS" and is
-     * configured to the GMT time zone.
-     */
-  public static final DateFormat respDateMsFormatter =
-                          UtilFns.createDateFormatObj("yyyy,D,HH:mm:ss.SSS",
-                                                 UtilFns.GMT_TIME_ZONE_OBJ);
-    /**
-     * DateFormat object for formatting FISSURES-style date/time
-     * strings from Date objects.  Uses a pattern string of
-     * "yyyyDDD'T'HH:mm:ss.SSS'z'" and is configured to the GMT time zone.
-     */
-  public static final DateFormat fissDateFormatter =
-                    UtilFns.createDateFormatObj("yyyyDDD'T'HH:mm:ss.SSS'z'",
-                                                 UtilFns.GMT_TIME_ZONE_OBJ);
-    /**
-     * DateFormat object for formatting date/time values for use
-     * with file names.  Uses a pattern string of "yyyy.DDD.HH.mm.ss.SSS"
-     * and is configured to the GMT time zone.
-     */
-  public static final DateFormat fNameDateFormatter =
-                        UtilFns.createDateFormatObj("yyyy.DDD.HH.mm.ss.SSS",
-                                                 UtilFns.GMT_TIME_ZONE_OBJ);
-
     /** Date value of "2599,365,23:59:59" for "no end date". */
   public static final Date NO_ENDDATE_OBJ = new Date(19880899199000L);
 
@@ -652,6 +619,7 @@ public class RespUtils
       }
       if(dateObj != null)
       {     //begin-date converted OK; format into filename string
+        DateFormat fNameDateFormatter = UtilFns.createDateFormatObj("yyyy.DDD.HH.mm.ss.SSS", UtilFns.GMT_TIME_ZONE_OBJ); // thread-local instance
         dateStr = "." + fNameDateFormatter.format(dateObj);
         int p;        //check if any trailing zeros can be trimmed:
         if((p=dateStr.lastIndexOf('.')) > 0 &&
@@ -777,6 +745,7 @@ public class RespUtils
     if(chObj == null)        //if null handle then
       return "(null)";       //return indicator string
     String dateStr;
+    DateFormat respDateFormatter = UtilFns.createDateFormatObj("yyyy,D,HH:mm:ss", UtilFns.GMT_TIME_ZONE_OBJ); // thread-local instance of formatter
     try
     {
       final Date dateObj =        //convert FISSURES time string to Date
@@ -1159,6 +1128,7 @@ public class RespUtils
       }
       try
       {            //parse into Date object and return
+        DateFormat respDateMsFormatter = UtilFns.createDateFormatObj("yyyy,D,HH:mm:ss.SSS",UtilFns.GMT_TIME_ZONE_OBJ); // thread-local instance
         return respDateMsFormatter.parse(dateStr);
       }
       catch(ParseException ex) {}      //if error then return null
@@ -1892,6 +1862,7 @@ public class RespUtils
   public static String fissDateToString(Date dateObj)
   {
                              //convert 'Date' object to a String:
+    DateFormat respDateMsFormatter = UtilFns.createDateFormatObj("yyyy,D,HH:mm:ss.SSS",UtilFns.GMT_TIME_ZONE_OBJ); // thread-local instance
     final String retStr = respDateMsFormatter.format(dateObj);
     if(!retStr.endsWith(".000"))       //if does not end with ".000" then
       return retStr;                   //return date/time String
@@ -2037,8 +2008,9 @@ public class RespUtils
       instObj.the_response = respObj;       //enter response object
                    //create and enter time range for response
                    // (if no end date then use "2599,365,23:59:59"):
+      DateFormat fissDateFormatter = UtilFns.createDateFormatObj("yyyyDDD'T'HH:mm:ss.SSS'z'", UtilFns.GMT_TIME_ZONE_OBJ);
       instObj.effective_time = new TimeRange(channelIdObj.begin_time,
-                                new Time(RespUtils.fissDateFormatter.format(
+                                new Time(fissDateFormatter.format(
          ((respEndDateObj != null) ? respEndDateObj : NO_ENDDATE_OBJ)),-1));
       final String retStr =
                           ResponsePrint.printResponse(channelIdObj,instObj);

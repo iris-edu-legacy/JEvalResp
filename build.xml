@@ -2,7 +2,7 @@
 
   <description>
     Build file for JEvalResp.
-    Tested with ant 1.7.1, jdk 1.7.0
+    Use Ant for build.  JDK 1.8 (Java 8)
   </description>
 
   <property name="src" location="src"/>
@@ -22,7 +22,7 @@
   <property name="regexp"  location="jars"/>
   <property name="orbacus"  location="jars"/>
 
-  <property name="version" value="1.80"/>
+  <property name="version" value="1.9.7"/>
   <property name="jar" value="JEvalResp.jar"/>
   <property name="run" value="com.isti.jevalresp.Run"/>
   <property name="runext" value="com.isti.jevalresp.RunExt"/>
@@ -40,7 +40,10 @@
   </fileset>
   <fileset id="utils.jars" dir="${utils}" includes="isti.util.jar"/>
   <fileset id="regexp.jars" dir="${regexp}" includes="gnu-regexp-1.1.3.jar"/>
-  <fileset id="irisws.jars" dir="${jars}" includes="IRIS-WS-2.0.11.jar"/>
+  <fileset id="irisws.jars" dir="${jars}">
+    <include name="IRIS-WS-2.0.19.jar"/>
+    <include name="fdsn-stationxml-model-1.6.0.jar"/>
+  </fileset> 
   <fileset id="junit.jars" dir="${jars}">
     <include name="junit-4.12.jar"/>
     <include name="hamcrest-core-1.3.jar"/>
@@ -66,7 +69,7 @@
   <target name="compile" depends="init" description="compile the source" >
     <javac srcdir="${src}" destdir="${build}" compiler="modern"
            debug="true" debuglevel="lines,vars,source"
-           target="1.5" source="1.5">
+           target="1.8" source="1.8">
       <classpath refid="build.classpath"/>
     </javac>
   </target>
@@ -94,7 +97,7 @@
 
   <target name="jars" depends="compile" description="generate the jar" >
 
-    <!-- stage 1: everything except iwis-ws -->
+    <!-- stage 1: everything except iris-ws -->
     <delete dir="${tmp1}"/><mkdir dir="${tmp1}"/>
     <copy todir="${tmp1}">
       <fileset dir="${build}"/>

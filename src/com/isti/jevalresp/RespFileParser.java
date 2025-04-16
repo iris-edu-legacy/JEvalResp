@@ -31,12 +31,14 @@
 //   8/26/2014 -- [ET]  Modified 'findChannelId()' method to properly
 //                      handle location/site value of "--" (meaning
 //                      location value empty).
+//   4/15/2025 -- EarthScope -- change Vector types to ArrayLists
 //
 
 package com.isti.jevalresp;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import edu.iris.Fissures.Time;
@@ -77,7 +79,7 @@ public class RespFileParser
   private BlockFieldSpec firstBFSpec = null;     //pre-read spec object
   protected String errorMessage = null;     //error message from parsing
   protected String infoMessage = null;      //info message from parsing
-  private Vector curStagesVec = null;       //Vector of 'Stage' objects
+  private List<Stage> curStagesVec = null;       //List of 'Stage' objects
   private int curStageSeqNum = 0;           //stage seq # tracker
   private Sensitivity curSensitivityObj = null;  //sensitivity for response
 
@@ -610,7 +612,7 @@ public class RespFileParser
                                                          inTokens.lineno());
       return null;
     }
-    curStagesVec = new Vector();       //create Vector for 'Stage' objects
+    curStagesVec = new ArrayList<Stage>(); //create ArrayList for 'Stage' objects
     curStageSeqNum = 0;                //initialize stage seq # tracker
     curSensitivityObj = null;          //init sensitivity for response
     mainLoop:
@@ -692,7 +694,7 @@ public class RespFileParser
         return null;
       }
     }
-         //convert Vector of stage objects to array:
+         //convert ArrayList of stage objects to array:
     Stage [] stageArr;
     try
     {
@@ -702,7 +704,7 @@ public class RespFileParser
     catch(Exception ex)
     {         //error detected (shouldn't happen); set error message:
       setErrorMessage("Internal error:  Unable to create stages array " +
-                                 "from vector in 'readResponse()':  " + ex);
+                                 "from ArrayList in 'readResponse()':  " + ex);
       return null;
     }
          //check for null handles in response elements:
@@ -796,7 +798,7 @@ public class RespFileParser
       if(forceFlag || seqNum > curStageSeqNum)
       {  //stage sequence number is new
         Stage stageObj;
-        curStagesVec.add(    //create new Stage object and add to Vector
+        curStagesVec.add(    //create new Stage object and add to ArrayList
                   stageObj = new Stage(null,null,null,null,null,null,null));
         curStageSeqNum = seqNum;       //save new stage sequence number
         return stageObj;
@@ -873,15 +875,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                    "in 'readPolesZeros()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                    "in 'readPolesZeros()'");
         return false;
       }
@@ -1092,14 +1094,14 @@ public class RespFileParser
       {
         final PoleZeroFilter pzFilter =     //get last filter object
              stageObj.filters[stageObj.filters.length-1].pole_zero_filter();
-              //build Vector containing old and new pole values,
+              //build ArrayList containing old and new pole values,
               // then convert it back to an array and enter into filter:
-        final Vector vec = new Vector();
+        final ArrayList<ComplexNumberErrored> vec = new ArrayList<ComplexNumberErrored>();
         vec.addAll(Arrays.asList(pzFilter.poles));
         vec.addAll(Arrays.asList(polesArr));
         pzFilter.poles = (ComplexNumberErrored [])
                         (vec.toArray(new ComplexNumberErrored[vec.size()]));
-              //clear Vector and do same thing for zeros:
+              //clear ArrayList and do same thing for zeros:
         vec.clear();
         vec.addAll(Arrays.asList(pzFilter.zeros));
         vec.addAll(Arrays.asList(zerosArr));
@@ -1195,15 +1197,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                  "in 'readCoefficients()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                  "in 'readCoefficients()'");
         return false;
       }
@@ -1358,14 +1360,14 @@ public class RespFileParser
       {
         final CoefficientFilter coeffFilter =    //get last filter object
                  stageObj.filters[stageObj.filters.length-1].coeff_filter();
-              //build Vector containing old and new numerator values,
+              //build ArrayList containing old and new numerator values,
               // then convert it back to an array and enter into filter:
-        final Vector vec = new Vector();
+        final ArrayList<CoefficientErrored> vec = new ArrayList<CoefficientErrored>();
         vec.addAll(Arrays.asList(coeffFilter.numerator));
         vec.addAll(Arrays.asList(numeratorsArr));
         coeffFilter.numerator = (CoefficientErrored [])
                           (vec.toArray(new CoefficientErrored[vec.size()]));
-              //clear Vector and do same thing for denominator:
+              //clear ArrayList and do same thing for denominator:
         vec.clear();
         vec.addAll(Arrays.asList(coeffFilter.denominator));
         vec.addAll(Arrays.asList(denominatorsArr));
@@ -1438,15 +1440,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                          "in 'readList()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                          "in 'readList()'");
         return false;
       }
@@ -1640,15 +1642,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                       "in 'readGeneric()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                       "in 'readGeneric()'");
         return false;
       }
@@ -1785,15 +1787,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                    "in 'readDecimation()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                    "in 'readDecimation()'");
         return false;
       }
@@ -1997,15 +1999,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                              "in 'readSensitivity/Gain()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                              "in 'readSensitivity/Gain()'");
         return false;
       }
@@ -2178,15 +2180,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                           "in 'readFIR()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                           "in 'readFIR()'");
         return false;
       }
@@ -2345,9 +2347,9 @@ public class RespFileParser
       {
         final CoefficientFilter coeffFilterObj =  //get last filter object
                  stageObj.filters[stageObj.filters.length-1].coeff_filter();
-              //build Vector containing old and new numerator values,
+              //build ArrayList containing old and new numerator values,
               // then convert it back to an array and enter into filter:
-        final Vector vec = new Vector();
+        final ArrayList<CoefficientErrored> vec = new ArrayList<CoefficientErrored>();
         vec.addAll(Arrays.asList(coeffFilterObj.numerator));
         vec.addAll(Arrays.asList(numeratorsArr));
         coeffFilterObj.numerator = (CoefficientErrored [])
@@ -2433,15 +2435,15 @@ public class RespFileParser
       final int len;
       if((len=curStagesVec.size()) <= 0)       //get current # of stages
       {     //no current stages (shouldn't happen); set error message
-        setErrorMessage("Internal error:  Vector of stages empty " +
+        setErrorMessage("Internal error:  ArrayList of stages empty " +
                                                    "in 'readPolynomial()'");
         return false;
       }
-                 //setup handle to last Stage in Vector:
+                 //setup handle to last Stage in ArrayList:
       Object obj;
-      if(!((obj=curStagesVec.elementAt(len-1)) instanceof Stage))
+      if(!((obj=curStagesVec.get(len-1)) instanceof Stage))
       {
-        setErrorMessage("Internal error:  Non-Stage type in Vector " +
+        setErrorMessage("Internal error:  Non-Stage type in ArrayList " +
                                                    "in 'readPolynomial()'");
         return false;
       }
@@ -2685,7 +2687,7 @@ public class RespFileParser
           return false;
         }
         if(stageNum > curStageSeqNum)
-        {     //stage seq# is new; create new Stage obj and add to Vector
+        {     //stage seq# is new; create new Stage obj and add to ArrayList
           curStagesVec.add(new Stage(null,null,null,null,null,null,null));
           curStageSeqNum = stageNum;   //save new stage sequence number
         }

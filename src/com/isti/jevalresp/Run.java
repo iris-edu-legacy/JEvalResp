@@ -184,7 +184,7 @@ public class Run
     /** Displayed name of program. */
     public static final String PROGRAM_NAME = "JEvalResp";
     /** Displayed program version # (+"(file)" if files-only version). */
-    public static final String VERSION_NUM_STR = "1.80" +
+    public static final String VERSION_NUM_STR = "1.9.7" +
             (NetVersionFlag.value ? UtilFns.EMPTY_STRING : "(file)");
     /** Displayed program revision string (name + version #). */
     public static final String REVISION_STR =
