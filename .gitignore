@@ -11,7 +11,10 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
+jars/src.jar
+jars/EvalResp.jar
+jars/JEvalRespClasses.jar
 *.war
 *.nar
 *.ear
