@@ -97,7 +97,7 @@ public class RunDirect extends Run
       networkStr = UtilFns.EMPTY_STRING;
     if(siteStr == null)
       siteStr = UtilFns.EMPTY_STRING;
-    final Vector respBlkVec = new Vector();      //RespInfoBlk objs
+    final Vector<RespInfoBlk> respBlkVec = new Vector<>();      //RespInfoBlk objs
          //create response processor object:
     final RespProcessor respProcObj = new RespProcessor(false,false,
                                                            outputDirectory);
@@ -367,7 +367,7 @@ public class RunDirect extends Run
         setErrorMessage("Unable to calculate amp/phase result");
         return null;
       }
-      return new Double(ampPhaseArr[0].amp);     //return first amplitude
+      return Double.valueOf(ampPhaseArr[0].amp);     //return first amplitude
     }
     return null;
   }

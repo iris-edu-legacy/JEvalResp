@@ -160,7 +160,7 @@ public class RunBlks
                                                     outUnitsConvStr + "\"");
       return null;
     }
-    final Vector respBlkVec = new Vector();      //RespInfoBlk objs
+    final Vector<RespInfoBlk> respBlkVec = new Vector<>();      //RespInfoBlk objs
     if(verboseFlag)
     {    //verbose mode; show message
       System.err.println("<< " + Run.REVISION_STR + " Response Output >>");

@@ -14,6 +14,16 @@ $ ant
 
 You may find some warnings appear relating to the JavaDoc generator.  This does not prevent the build from completing.
 
+### Apache Commons Lang3 
+If you should encounter an error during the ant build akin to
+```
+JEvalResp/build.xml:120: java.lang.NoClassDefFoundError: org/apache/commons/lang3/ArrayUtils
+```
+Make sure that an apache commons jar file is present in the /jars directory and force ant to see it so that it can complete its COPY directives
+```
+$ ant -lib jars
+```
+
 ## DOCUMENTATION
 JEvalResp builds its own HTML docs that can be referenced and explored by accessing the index.html file in your JEvalResp folder in your browser.
 

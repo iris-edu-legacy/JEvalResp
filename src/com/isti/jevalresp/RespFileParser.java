@@ -37,6 +37,7 @@
 package com.isti.jevalresp;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -368,8 +369,8 @@ public class RespFileParser
 //                          ", net=" + netNameStr + ", site=" + siteNameStr +
 //            ", start=" + parsedStartDateStr + ", end=" + parsedEndDateStr);
                         //create Fissures Time object:
-          final Time fissTimeObj = new Time(RespUtils.fissDateFormatter.
-                                             format(parsedStartDateObj),-1);
+          DateFormat fissDateFormatter = UtilFns.createDateFormatObj("yyyyDDD'T'HH:mm:ss.SSS'z'", UtilFns.GMT_TIME_ZONE_OBJ);              
+          final Time fissTimeObj = new Time(fissDateFormatter.format(parsedStartDateObj),-1);
                         //create and return 'ChanIdHldr' object:
           return new ChanIdHldr(new ChannelId(new NetworkId(netNameStr,
                 fissTimeObj),staNameStr,siteNameStr,chaNameStr,fissTimeObj),

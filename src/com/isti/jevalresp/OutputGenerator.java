@@ -2526,7 +2526,7 @@ public class OutputGenerator
     if(sLineStr == null)               //make sure start-line string is OK
       sLineStr = UtilFns.EMPTY_STRING;
     String retStr;
-    final ArrayList secLineList = new ArrayList();    //second-line list
+    final ArrayList<String> secLineList = new ArrayList<String>();    //second-line list
     final int arrayLen;
     final double [] freqArr;
     if((freqArr=getCalcFreqArray()) == null ||
@@ -2633,7 +2633,7 @@ public class OutputGenerator
   public Float getRespSensitFactor()
   {
     return (respObj != null && respObj.the_sensitivity != null) ?
-               new Float(respObj.the_sensitivity.sensitivity_factor) : null;
+               Float.valueOf(respObj.the_sensitivity.sensitivity_factor) : null;
   }
 
     /**
@@ -2644,7 +2644,7 @@ public class OutputGenerator
   public Float getRespSensitFreq()
   {
     return (respObj != null && respObj.the_sensitivity != null) ?
-                        new Float(respObj.the_sensitivity.frequency) : null;
+                        Float.valueOf(respObj.the_sensitivity.frequency) : null;
   }
 
     /**
@@ -2662,13 +2662,13 @@ public class OutputGenerator
                                        stageObj.the_normalization != null &&
                                     stageObj.the_normalization.length > 0 &&
                           (normObj=stageObj.the_normalization[0]) != null) ?
-                          new Float(normObj.ao_normalization_factor) : null;
+                          Float.valueOf(normObj.ao_normalization_factor) : null;
   }
 
     /**
      * Returns the normalization frequency for the first stage of the
      * response.
-     * @return A new Float object containing the normalization frequency for
+     * @return A Float.valueOf object containing the normalization frequency for
      * the first stage of the response, or null if none available.
      */
   public Float getRespS1NormFreq()
@@ -2681,7 +2681,7 @@ public class OutputGenerator
                                        stageObj.the_normalization != null &&
                                     stageObj.the_normalization.length > 0 &&
                           (normObj=stageObj.the_normalization[0]) != null) ?
-                               new Float(normObj.normalization_freq) : null;
+                               Float.valueOf(normObj.normalization_freq) : null;
   }
 
     /**

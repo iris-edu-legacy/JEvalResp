@@ -17,8 +17,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
 import java.text.DateFormat;
+import java.net.URI;
 import java.net.URL;
 import com.isti.util.UtilFns;
+
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+
 import com.isti.util.FileUtils;
 
 /**
@@ -383,6 +387,7 @@ public class RespWebProc extends RespProcessor
    * @return true if successful; false if error (in which case
    * 'getErrorMessage()' may be used to see information about the error).
    */
+  @SuppressWarnings("unchecked")
   public boolean findWebResponses(String [] staArr, String [] chaArr,
                      String [] netArr, String [] siteArr, Date beginDateObj,
                       Date endDateObj, boolean verboseFlag, RespCallback respCallbackObj)
@@ -414,8 +419,8 @@ public class RespWebProc extends RespProcessor
       siteArr = new String[] { "*" };
     if(chaArr == null || chaArr.length <= 0)
       chaArr = new String[] { "*" };
-         //check if string contains comma-separated URLs:
-    List svrUrlsList = UtilFns.listStringToVector(serverUrlString,',',true);
+    //check if string contains comma-separated URLs:
+    List<String> svrUrlsList = UtilFns.listStringToVector(serverUrlString,',',true);
          //if not multiple then check for semicolon-separated URLs:
     if(svrUrlsList.size() < 2)
     {
@@ -424,7 +429,7 @@ public class RespWebProc extends RespProcessor
       if(svrUrlsList.size() < 2)
         svrUrlsList = UtilFns.listStringToVector(serverUrlString,' ',true);
     }
-    final Iterator iterObj = svrUrlsList.iterator();
+    final Iterator<String> iterObj = svrUrlsList.iterator();
     Object obj;
     while(iterObj.hasNext())
     {  //for each web-services server URL specified
@@ -486,18 +491,10 @@ public class RespWebProc extends RespProcessor
     final String [] staArr,chaArr,netArr,siteArr;
     try
     {         //convert list strings to arrays of strings:
-      staArr = (staListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(staListStr,',',false).
-                                             toArray(new String[0])) : null;
-      chaArr = (chaListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(chaListStr,',',false).
-                                             toArray(new String[0])) : null;
-      netArr = (netListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(netListStr,',',false).
-                                             toArray(new String[0])) : null;
-      siteArr = (siteListStr.trim().length() > 0) ?
-              (String [])(UtilFns.listStringToVector(siteListStr,',',false).
-                                             toArray(new String[0])) : null;
+      staArr = RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staListStr,',',false));
+      chaArr = RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(chaListStr,',',false));
+      netArr = RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staListStr,',',false));
+      siteArr = RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(siteListStr,',',false));
     }
     catch(Exception ex)
     {         //exception occurred; set error message
@@ -600,8 +597,9 @@ public class RespWebProc extends RespProcessor
               }
               final InputStream stmObj;
               try
-              {  //attempt to open connection via query string:
-                stmObj = (new URL(queryStr)).openStream();
+              {  // attempt to open connection via query string:
+                // updated URL constructor to non-deprecated URI constructor
+                stmObj = (new URI(queryStr)).toURL().openStream();
               }
               catch(FileNotFoundException ex)
               {  //matching response not found; set message and abort

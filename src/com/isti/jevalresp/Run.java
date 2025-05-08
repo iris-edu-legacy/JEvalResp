@@ -309,7 +309,7 @@ public class Run
     /** Start and stop stage numbers to be processed
      * (this parameter contains two integer values). */
     protected final CfgPropItem stageNumbersProp = paramProps.add(
-            "stageNumbers",(new Integer[] {new Integer(-1),new Integer(-1)}),
+            "stageNumbers",(new Integer[] {Integer.valueOf(-1),Integer.valueOf(-1)}),
             "stage","Start/stop stage #'s (1 or 2 values)");
 
     /** Flag set true to use 'stdio' for input and output (pipe). */
@@ -330,12 +330,12 @@ public class Run
 
     /** Year value for end of time range to be matched. */
     protected final CfgPropItem endYearProp =
-            paramProps.add("endYear",new Integer(0),
+            paramProps.add("endYear",Integer.valueOf(0),
                     "ey","Year value for end of time range");
 
     /** Julian day value for end of time range to be matched. */
     protected final CfgPropItem endDayProp =
-            paramProps.add("endDay",new Integer(0),
+            paramProps.add("endDay",Integer.valueOf(0),
                     "ed","Julian day val for end of time range");
 
     /** Time-of-day value for end of time range to be matched. */
@@ -379,7 +379,7 @@ public class Run
 
     /** Tension value for List-blockette interpolation. */
     protected final CfgPropItem interpTensionProp =
-            paramProps.add("interpTension",new Double(INTERP_TENSION_DEFVAL),
+            paramProps.add("interpTension",Double.valueOf(INTERP_TENSION_DEFVAL),
                     "it","Tension for List blockette interp");
 
     /** Flag set true to unwrap phase output values. */
@@ -394,7 +394,7 @@ public class Run
 
     /** Sample value for polynomial blockette (62). */
     protected final CfgPropItem b62XValueProp =
-            paramProps.add("b62XValue",new Double(0.0),
+            paramProps.add("b62XValue",Double.valueOf(0.0),
                     "b62_x","Sample value for polynomial blockette");
 
     /** Flag set true to send debug messages to 'stderr'. */
@@ -1209,6 +1209,7 @@ public class Run
      * @param str string
      * @return An array of strings, or null if an error occurred.
      */
+    @SuppressWarnings("unchecked")
     public static String [] listToStringArray(String str)
     {
         try

@@ -36,12 +36,15 @@
 //  10/22/2013 -- [ET]  Added optional 'b62XValue' parameter to method
 //                      'findAndOutputNetResponses()'.
 //
+//  4/21/2025 -- EarthScope -- cleaning up some warnings relating to generic Vectors
 
 package com.isti.jevalresp;
 
 import java.util.*;
 import java.text.DateFormat;
 import java.io.File;
+import java.lang.reflect.Array;
+
 import gnu.regexp.RE;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
@@ -741,19 +744,15 @@ public class RespNetProc extends RespProcessor
   {
     final String [] staArr,chaArr,netArr,siteArr;
     try
-    {         //convert list strings to arrays of strings:
-      staArr = (staListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(staListStr,',',false).
-                                             toArray(new String[0])) : null;
-      chaArr = (chaListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(chaListStr,',',false).
-                                             toArray(new String[0])) : null;
-      netArr = (netListStr.trim().length() > 0) ?
-               (String [])(UtilFns.listStringToVector(netListStr,',',false).
-                                             toArray(new String[0])) : null;
-      siteArr = (siteListStr.trim().length() > 0) ?
-              (String [])(UtilFns.listStringToVector(siteListStr,',',false).
-                                             toArray(new String[0])) : null;
+    { //convert list strings to arrays of strings, listStringToVector also does other scrubbing:
+      staArr = (staListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staListStr,',',false)) : null;
+      chaArr = (chaListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(chaListStr,',',false)) : null;
+      netArr = (netListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(netListStr,',',false)) : null;
+      siteArr = (siteListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(siteListStr,',',false)) : null;
     }
     catch(Exception ex)
     {         //exception occurred; set error message
@@ -910,8 +909,7 @@ public class RespNetProc extends RespProcessor
     }
     try
     {         //convert table to array of 'NetworkAccess' objects:
-      return (NetworkAccess [])netAccessTbl.getValuesVector().toArray(
-                                    new NetworkAccess[netAccessTbl.size()]);
+      return RespUtils.getArrayFromVector(NetworkAccess.class, netAccessTbl.getValuesVector());
     }
     catch(Exception ex)
     {         //error converting array (shouldn't happen); set message
@@ -949,6 +947,7 @@ public class RespNetProc extends RespProcessor
      * case 'getErrorMessage()' may be used to see information about the
      * error).
      */
+  @SuppressWarnings("unchecked")
   public boolean procNetResponses(NetworkAccess [] netAccArr,
       String [] staArr,String [] chaArr,String [] siteArr,Date beginDateObj,
            Date endDateObj,boolean verboseFlag,RespCallback respCallbackObj)
@@ -968,7 +967,7 @@ public class RespNetProc extends RespProcessor
                     new Time(fDateFormatter.format(beginDateObj),-1) : null;
                              //table of 'ChannelId' objects found:
     final FifoHashtable channelIdTable = new FifoHashtable();
-    final Vector chanIdFNameVec = new Vector();  //Vector of chan ID Strings
+    final Vector<String> chanIdFNameVec = new Vector<String>();  //Vector of chan ID Strings
                                   //get number of 'NetworkAccess' elements:
     final int netArrLen = (netAccArr != null) ? netAccArr.length : 0;
     int staIdx,chaIdx,siteIdx,netIdx,i,vecSize,numAhead,aheadCount;
@@ -979,7 +978,7 @@ public class RespNetProc extends RespProcessor
     ChannelId [] chanIdArr;
     ChannelId chIdObj;
     Instrumentation instObj;
-    Vector vec;
+    Vector<ChannelId> chanVector;
     NetworkAttr nAttribObj;
     RE staPatternObj,chaPatternObj,sitePatternObj;
     Object obj;
@@ -1186,8 +1185,8 @@ public class RespNetProc extends RespProcessor
                 }
                    //processes channel-IDs in 'channelIdTable':
                                   //get Vector of 'ChannelId' objects found:
-                vec = channelIdTable.getValuesVector();
-                vecSize = vec.size();
+                chanVector = (Vector<ChannelId>) channelIdTable.getValuesVector();
+                vecSize = chanVector.size();
                 if(verboseFlag)
                 {  //verbose messages enabled; note # of matching IDs
                   System.err.println(vecSize + " channel-ID" +
@@ -1197,7 +1196,7 @@ public class RespNetProc extends RespProcessor
                   {     //not too many in Vector; display a string for each
                     for(i=0; i<vecSize; ++i)
                     {  //for each 'ChannelId' object in Vector; show string
-                      if((obj=vec.elementAt(i)) instanceof ChannelId)
+                      if((obj=chanVector.elementAt(i)) instanceof ChannelId)
                       {      //'ChannelId' object fetched OK
                         System.err.println("  " +
                              RespUtils.channelIdToEvString((ChannelId)obj));
@@ -1207,7 +1206,7 @@ public class RespNetProc extends RespProcessor
                 }
                 for(i=0; i<vecSize; ++i)
                 {  //for each 'ChannelId' object in Vector
-                  if((obj=vec.elementAt(i)) instanceof ChannelId)
+                  if((obj=chanVector.elementAt(i)) instanceof ChannelId)
                   {     //'ChannelId' object fetched OK
                     chIdObj = (ChannelId)obj;    //set handle to object
                         //generate display "filename" from channel ID info
@@ -1220,13 +1219,13 @@ public class RespNetProc extends RespProcessor
                              // station, channel and site codes
                              // (last one wants to be processed first):
                       if(i < vecSize-1 &&
-                            (obj=vec.elementAt(i+1)) instanceof ChannelId &&
+                            (obj=chanVector.elementAt(i+1)) instanceof ChannelId &&
                                staChaSiteEqualLater(chIdObj,(ChannelId)obj))
                       {      //not at end of Vector and codes match
                         chIdObj = (ChannelId)obj;  //set handle to next elem
                         numAhead = 1;              //indicate moved ahead 1
                         while(++i < vecSize-1 &&
-                            (obj=vec.elementAt(i+1)) instanceof ChannelId &&
+                            (obj=chanVector.elementAt(i+1)) instanceof ChannelId &&
                                staChaSiteEqualLater(chIdObj,(ChannelId)obj))
                         {    //for each channel-ID with same codes
                           chIdObj = (ChannelId)obj;   //set to next elem
@@ -1329,7 +1328,7 @@ public class RespNetProc extends RespProcessor
                         if(++aheadCount > numAhead)   //if no more ahead
                           break;                      // then exit loop
                                             //fetch previous channel-ID:
-                        if((obj=vec.elementAt(i-aheadCount)) instanceof
+                        if((obj=chanVector.elementAt(i-aheadCount)) instanceof
                                                                   ChannelId)
                         {    //previous channel-ID object fetched OK
                           chIdObj = (ChannelId)obj;   //set handle to object
@@ -1417,7 +1416,7 @@ public class RespNetProc extends RespProcessor
                                                 " channel-IDs from server");
           }
                    //convert array to Vector of 'ChannelId' objects:
-          final Vector chanIdVec = new Vector(Arrays.asList(chanIdArr));
+          final Vector<ChannelId> chanIdVec = new Vector<ChannelId>(Arrays.asList(chanIdArr));
           final ChannelIdSeqHolder seqHolderObj = new ChannelIdSeqHolder();
                    //fetch next set of IDs; save "more" flag:
           boolean moreFlag = iterObj.next_n(SEQ_MAX-SEQ_INIT,seqHolderObj);
@@ -1567,4 +1566,5 @@ public class RespNetProc extends RespProcessor
                                 id1Obj.site_code.equals(id2Obj.site_code) &&
            RespUtils.compareTimes(id1Obj.begin_time,id2Obj.begin_time) <= 0;
   }
+
 }

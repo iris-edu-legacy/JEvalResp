@@ -121,17 +121,13 @@ public class RunExt extends Run
     try
     {         //convert list strings to arrays of strings:
       staNamesArray = (staListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(staListStr,',',false).
-                                             toArray(new String[0])) : null;
+          RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staListStr,',',false)) : null;
       chaNamesArray = (chaListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(chaListStr,',',false).
-                                             toArray(new String[0])) : null;
+      RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(chaListStr,',',false)) : null;
       netNamesArray = (netListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(netListStr,',',false).
-                                             toArray(new String[0])) : null;
+      RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(netListStr,',',false)) : null;
       siteNamesArray = (siteListStr.trim().length() > 0) ?
-           (String [])(UtilFns.listStringToVector(siteListStr,',',false).
-                                             toArray(new String[0])) : null;
+      RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(siteListStr,',',false)) : null;
     }
     catch(Exception ex)
     {         //exception occurred; set error message

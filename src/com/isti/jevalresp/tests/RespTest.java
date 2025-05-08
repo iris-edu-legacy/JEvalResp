@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.Response;
 import com.isti.jevalresp.*;
 import com.isti.util.UtilFns;
 import com.isti.util.LogFile;
+import com.isti.jevalresp.RespUtils;
 
 /**
  * Class RespTest tests JEvalResp functionality.
@@ -68,17 +69,14 @@ public class RespTest
       case 0:
     }
     final String [] staArr = (staStr.trim().length() > 0) ?
-                (String [])(UtilFns.quotedStringsToVector(staStr,',',false).
-                                             toArray(new String[0])) : null;
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staStr,',',false)) : null;
     final String [] chaArr = (chaStr.trim().length() > 0) ?
-                (String [])(UtilFns.quotedStringsToVector(chaStr,',',false).
-                                             toArray(new String[0])) : null;
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(chaStr,',',false)) : null;
     final String [] netArr = (netStr.trim().length() > 0) ?
-                (String [])(UtilFns.quotedStringsToVector(netStr,',',false).
-                                             toArray(new String[0])) : null;
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(netStr,',',false)) : null;
     final String [] locArr = (locStr.trim().length() > 0) ?
-                (String [])(UtilFns.quotedStringsToVector(locStr,',',false).
-                                             toArray(new String[0])) : null;
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(locStr,',',false)) : null;
+
     Date dateObj = null;
     if(yearStr.length() > 0)
     {

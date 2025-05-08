@@ -51,6 +51,7 @@
 package com.isti.jevalresp;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
@@ -1048,7 +1049,7 @@ public class RespUtils
     {
       return null;
     }
-    return new Double(sampObj.interval.value / sampObj.numPoints *
+    return Double.valueOf(sampObj.interval.value / sampObj.numPoints *
                                                       pow10(unitObj.power));
   }
 
@@ -1070,7 +1071,7 @@ public class RespUtils
     {
       return null;
     }
-    return new Double(intervalObj.value * pow10(unitObj.power));
+    return Double.valueOf(intervalObj.value * pow10(unitObj.power));
   }
 
     /**
@@ -1252,7 +1253,7 @@ public class RespUtils
       final int len;         //unit is composite type
       if(unitObj.elements != null && (len=unitObj.elements.length) > 0)
       {  //elements array contains objects
-        final Vector retVec = new Vector();
+        final Vector<Unit> retVec = new Vector<>();
         Unit eUnit;
         for(int i=0; i<len; ++i)
         {     //for each Unit object in 'elements' array
@@ -1358,6 +1359,7 @@ public class RespUtils
      * 'initialFilesVec' Vector and any new files that match the criteria
      * items.
      */
+  @SuppressWarnings("unchecked")
   public static File [] findRespfiles(String searchPathStr,
                             String [] stationPatArr,String [] channelPatArr,
                                String [] networkPatArr,String [] sitePatArr,
@@ -1366,8 +1368,8 @@ public class RespUtils
     if(prefixStr == null)
       prefixStr = UtilFns.EMPTY_STRING;     //make sure prefix str not null
          //use initial Vector of File objects or create new if none given:
-    final Vector retVec = (initialFilesVec != null) ? initialFilesVec :
-                                                               new Vector();
+    final Vector<File> retVec = (initialFilesVec != null) ? initialFilesVec :
+                                                               new Vector<>();
                    //create list of files starting with 'prefixStr':
     File [] fileArr = resolveNameToFileObjs(searchPathStr,
                                                      (prefixStr + "*.*.*"));
@@ -1480,6 +1482,7 @@ public class RespUtils
      * @return An array of 'File' objects that match the criteria items,
      * or an empty array if no matching files were found.
      */
+  @SuppressWarnings("unchecked")
   public static File [] findRespfiles(String searchPathStr,
                             String [] stationPatArr,String [] channelPatArr,
                                String [] networkPatArr,String [] sitePatArr,
@@ -1490,7 +1493,7 @@ public class RespUtils
     return findRespfiles(searchPathStr,stationPatArr,channelPatArr,
                                          networkPatArr,sitePatArr,prefixStr,
                   ((initialFilesArr != null && initialFilesArr.length > 0) ?
-                        new Vector(Arrays.asList(initialFilesArr)) : null));
+                        new Vector<File>(Arrays.asList(initialFilesArr)) : null));
   }
 
     /**
@@ -1548,7 +1551,7 @@ public class RespUtils
     int ePos,sPos = 0;
     File fileObj;
     File [] fileArr;
-    final Vector fileVec = new Vector();  //Vector of 'File' objects
+    final Vector<File> fileVec = new Vector<>();  //Vector of 'File' objects
     do
     {  //for each entry in param string; find next path separator char
       if((ePos=fileNameListStr.indexOf(File.pathSeparatorChar,sPos)) < 0)
@@ -2022,6 +2025,16 @@ public class RespUtils
       ex.printStackTrace();
     }
     return UtilFns.EMPTY_STRING;
+  }
+   // Since this code is bound to some proprietary classes, we are going to improve our
+  // vector to array conversion with generics by remapping the Vector of (presumably) type T elements,
+  // but lacking in a generics declaration of type T, to an array of type T elements so declared.
+  // REC  5/5/2025
+  public static <T> T[] getArrayFromVector(Class<T> arrayOfType,Vector<?> origVector) {
+      @SuppressWarnings("unchecked")     // yes, you can hate me now
+      T[] typedArray = (T[]) Array.newInstance(arrayOfType,origVector.size());
+      ArrayList<Object> typedList = new ArrayList<>(origVector);
+      return typedList.toArray(typedArray);
   }
 
 

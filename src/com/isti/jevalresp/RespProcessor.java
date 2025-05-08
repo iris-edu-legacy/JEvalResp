@@ -55,7 +55,9 @@
 
 package com.isti.jevalresp;
 
-import java.io.*;
+import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.Date;
 import java.util.Vector;
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -595,7 +597,7 @@ public class RespProcessor
           return true;
         }
       }
-      final Vector fileVec = new Vector();  //Vector to hold 'File' objects
+      final Vector<File> fileVec = new Vector<File>();  //Vector to hold 'File' objects
       boolean anyDirsFlag = false;          //set true if any directory names
       boolean isFileFlag,isDirFlag;
       String nameStr;
@@ -613,7 +615,7 @@ public class RespProcessor
         if(isFileFlag || UtilFns.isURLAddress(
                           RespUtils.fileObjPathToUrlStr(fileObj.getPath())))
         {     //accessible as local file or is a URL address
-          fileVec.add(fileObj);        //add to Vector
+          fileVec.add((File) fileObj);        //add to Vector
         }
         else
         {     //'File' does not reference a file
@@ -735,7 +737,7 @@ public class RespProcessor
     Response respObj;
     String channelIdFName,str;
     int numIdMatch = 0;
-    final Vector chanIdFNameVec = new Vector();  //Vector of chan ID fnames
+    final Vector<String> chanIdFNameVec = new Vector<String>();  //Vector of chan ID fnames
     if(!parserObj.getErrorFlag())
     {       //no errors detected so far
       if((chanIdHldrObj=parserObj.findChannelId(staArr,chaArr,
@@ -852,19 +854,15 @@ public class RespProcessor
   {
     final String [] staArr,chaArr,netArr,siteArr;
     try
-    {         //convert list strings to arrays of strings:
-      staArr = (staListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(staListStr,',',false).
-                                             toArray(new String[0])) : null;
-      chaArr = (chaListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(chaListStr,',',false).
-                                             toArray(new String[0])) : null;
-      netArr = (netListStr.trim().length() > 0) ?
-            (String [])(UtilFns.listStringToVector(netListStr,',',false).
-                                             toArray(new String[0])) : null;
-      siteArr = (siteListStr.trim().length() > 0) ?
-           (String [])(UtilFns.listStringToVector(siteListStr,',',false).
-                                             toArray(new String[0])) : null;
+    { //convert list strings to arrays of strings, listStringToVector also does other scrubbing:
+      staArr = (staListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(staListStr,',',false)) : null;
+      chaArr = (chaListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(chaListStr,',',false)) : null;
+      netArr = (netListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(netListStr,',',false)) : null;
+      siteArr = (siteListStr.trim().length() > 0) ? 
+        RespUtils.getArrayFromVector(String.class, UtilFns.listStringToVector(siteListStr,',',false)) : null;
     }
     catch(Exception ex)
     {         //exception occurred; set error message
